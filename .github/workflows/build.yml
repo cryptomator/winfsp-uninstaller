@@ -37,4 +37,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: winfsp-uninstaller.exe
-        path: .\winfsp-uninstaller\bin\x64\Release\winfsp-uninstaller.exe
+        path: .\winfsp-uninstaller\x64\Release\winfsp-uninstaller.exe
