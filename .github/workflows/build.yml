@@ -41,5 +41,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: winfsp-uninstaller.exe
-        path: .\winfsp-uninstaller\x64\${{env.BUILD_CONFIG}}
+        path: ${{env.GITHUB_WORKSPACE}}\winfsp-uninstaller\x64\${{env.BUILD_CONFIG}}\winfsp-uninstaller.exe
         if-no-files-found: error
