@@ -14,6 +14,7 @@ on:
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: .\winfsp-uninstaller.sln
+  BUILD_CONFIG: Debug
 
 permissions:
   contents: read
@@ -28,13 +29,17 @@ jobs:
       uses: microsoft/setup-msbuild@v1
       with:
         msbuild-architecture: x64
+    - name: If tagged, use release config
+      if: startsWith(github.ref, 'refs/tags/')
+      run: echo "BUILD_CONFIG=Release" >> "$GITHUB_ENV"
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=Release /p:Platform=x64 ${{env.SOLUTION_FILE_PATH}}
-    - name: Upload executable
+      run: msbuild /m /p:Configuration=${{BUILD_CONFIG}} /p:Platform=x64 ${{env.SOLUTION_FILE_PATH}}
+    - name: Upload build dir
       uses: actions/upload-artifact@v2
       with:
         name: winfsp-uninstaller.exe
-        path: .\winfsp-uninstaller\x64\Release\winfsp-uninstaller.exe
+        path: .\winfsp-uninstaller\x64\${{env.BUILD_CONFIG}}
+        if-no-files-found: error
