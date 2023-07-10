@@ -33,3 +33,8 @@ jobs:
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=Release /p:Platform=x64 ${{env.SOLUTION_FILE_PATH}}
+    - name: Upload executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: winfsp-uninstaller.exe
+        path: .\winfsp-uninstaller\bin\x64\Release\winfsp-uninstaller.exe
