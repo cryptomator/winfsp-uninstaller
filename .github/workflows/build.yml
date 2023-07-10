@@ -40,6 +40,6 @@ jobs:
     - name: Upload build dir
       uses: actions/upload-artifact@v2
       with:
-        name: winfsp-uninstaller.exe
+        name: winfsp-uninstaller
         path: .\x64\${{env.BUILD_CONFIG}}\winfsp-uninstaller.exe
         if-no-files-found: error
