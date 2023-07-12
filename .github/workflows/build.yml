@@ -12,18 +12,16 @@ on:
     tags:
       - '*'
 
-env:
-  # Path to the solution file relative to the root of the project.
-  SOLUTION_FILE_PATH: .\winfsp-uninstaller.sln
-  BUILD_CONFIG: Debug
-
 permissions:
   contents: read
 
 jobs:
   build:
     runs-on: windows-latest
-
+    env:
+        # Path to the solution file relative to the root of the project.
+        SOLUTION_FILE_PATH: .\winfsp-uninstaller.sln
+        BUILD_CONFIG: Debug
     steps:
     - uses: actions/checkout@v3
     - name: Add MSBuild to PATH
