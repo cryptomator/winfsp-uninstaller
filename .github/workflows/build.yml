@@ -31,6 +31,7 @@ jobs:
     - name: If tagged, use release config
       if: startsWith(github.ref, 'refs/tags/')
       run: echo "BUILD_CONFIG=Release" >> "$GITHUB_ENV"
+      shell: bash
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
