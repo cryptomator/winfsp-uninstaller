@@ -1,7 +1,7 @@
 # winfsp-uninstaller
 Executable for uninstalling WinFsp in a WiX Burn bundle.
 
-## What does this repostiroy solve?
+## What does this repository solve?
 
 The [WinFsp](https://winfps.dev) installer required up to version 1.12.22339 (inclusive) for an update to manually uninstall the old version first.
 Using a WiX Burn bundle with the default bootstrapper, it is not possible to trigger this uninstallation because you cannot obtain the product code of the old, installed version just using burn builtin actions.
