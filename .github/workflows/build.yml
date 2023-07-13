@@ -48,7 +48,7 @@ jobs:
         timestampUrl: 'http://timestamp.digicert.com'
         folder: x64\${{env.BUILD_CONFIG}}
     - name: Upload build dir
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: winfsp-uninstaller
         path: .\x64\${{env.BUILD_CONFIG}}\winfsp-uninstaller.exe
