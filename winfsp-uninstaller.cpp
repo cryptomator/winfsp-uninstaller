@@ -38,7 +38,19 @@ int main(const int argc, char* argv[])
     WCHAR title[61] = L"Unistall WinFsp";
     WCHAR message[251] = L"WinFSP 1.x driver found. Do you want to uninstall it?";
 
-    //add all arguments to a vector
+    //search product code with upgrade code
+    WCHAR code[39];
+    UINT result = MsiEnumRelatedProductsW(L"{82F812D9-4083-4EF1-8BC8-0F1EDA05B46B}", 0, 0, code);
+    if (result == ERROR_NO_MORE_ITEMS) {
+        //product not found
+        return 1;
+    }
+    else if (result != ERROR_SUCCESS) {
+        //error
+        return 2;
+    }
+
+    //parse arguments and show dialog
     std::vector<std::string> args;
     for (int i = 0; i < argc; i++) {
 		args.push_back(argv[i]);
@@ -63,17 +75,6 @@ int main(const int argc, char* argv[])
         }
     }
 
-    //search product code with upgrade code
-    WCHAR code[39];
-    UINT result = MsiEnumRelatedProductsW(L"{82F812D9-4083-4EF1-8BC8-0F1EDA05B46B}", 0, 0, code);
-    if (result == ERROR_NO_MORE_ITEMS) {
-        //product not found
-        return 1;
-    }
-    else if (result != ERROR_SUCCESS) {
-        //error
-        return 2;
-    }
 
     //disable UI
     MsiSetInternalUI((INSTALLUILEVEL)(INSTALLUILEVEL_NONE | INSTALLUILEVEL_UACONLY), NULL);
