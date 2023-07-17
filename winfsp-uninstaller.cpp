@@ -7,8 +7,6 @@
 #undef min
 
 #include <cstdlib>
-#include <iomanip>
-#include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -55,13 +53,8 @@ int main(const int argc, char* argv[])
     for (int i = 0; i < argc; i++) {
 		args.push_back(argv[i]);
 	}
-
-    //check if arguments contain -q flag
-    if(std::find(args.begin(), args.end(), "-q"s) != args.end()) {
-        quiet = true;
-	}
-
-    if (!quiet) {
+    //check if -q is not present
+    if ((std::find(args.begin(), args.end(), "-q"s) == args.end())) {
         //create alert dialog with OK and cancel button
 
         //adjust message and title
@@ -76,7 +69,7 @@ int main(const int argc, char* argv[])
     }
 
 
-    //disable UI
+    //disable winfsp UI
     MsiSetInternalUI((INSTALLUILEVEL)(INSTALLUILEVEL_NONE | INSTALLUILEVEL_UACONLY), NULL);
     //uninstall product
     result = MsiConfigureProductExW(code, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT, NULL);
