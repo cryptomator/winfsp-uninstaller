@@ -14,7 +14,7 @@
 #pragma comment(lib, "msi.lib")
 
 using namespace std::string_literals; // enables s-suffix for std::string literals
-void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest, UINT dest_length);
+void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest, size_t dest_length);
 
 /*
     Executable to uninstall the WinFSP 1.x driver.
@@ -32,9 +32,16 @@ void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest,
 */
 int main(const int argc, char* argv[])
 {
-    bool quiet = false;
-    WCHAR title[61] = L"Unistall WinFsp";
-    WCHAR message[251] = L"WinFSP 1.x driver found. Do you want to uninstall it?";
+    const std::string quiet_flag = "-q"s;
+
+    const std::string title_flag = "-t"s;
+    const size_t title_length = 61;
+    WCHAR title[title_length] = L"Unistall WinFsp";
+ 
+    const std::string msg_flag = "-m"s;
+    const size_t msg_length = 251;
+    WCHAR message[msg_length] = L"WinFSP 1.x driver found. Do you want to uninstall it?";
+
 
     //search product code with upgrade code
     WCHAR code[39];
@@ -54,12 +61,12 @@ int main(const int argc, char* argv[])
 		args.push_back(argv[i]);
 	}
     //check if -q is not present
-    if ((std::find(args.begin(), args.end(), "-q"s) == args.end())) {
+    if ((std::find(args.begin(), args.end(), quiet_flag) == args.end())) {
         //create alert dialog with OK and cancel button
 
         //adjust message and title
-        searchAndCopy("-t"s, args, title, 60);
-        searchAndCopy("-m"s, args, message, 250);
+        searchAndCopy(title_flag, args, title, title_length);
+        searchAndCopy(msg_flag, args, message, msg_length);
 
         int answer = MessageBox(NULL, message, title, MB_OKCANCEL | MB_ICONQUESTION | MB_TASKMODAL);
 
@@ -81,16 +88,16 @@ int main(const int argc, char* argv[])
     }
 }
 
-void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest, UINT dest_length) {
+void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest, size_t dest_length) {
     auto it = std::find(args.begin(), args.end(), flag);
     if (it != args.end()) {
         //get index of flag
-        int index = std::distance(args.begin(), it);
+        auto index = std::distance(args.begin(), it);
         //check if there is a string after the flag
-        if (index + 1 < args.size()) {
+        if ( index >= 0 && ((size_t) index) + 1 < args.size()) {
             //copy string to destination
             std::string args_content = args[index + 1];
-            int count = std::min((UINT)std::distance(args_content.begin(), args_content.end()), dest_length);
+            size_t count = std::min((size_t) std::distance(args_content.begin(), args_content.end()), dest_length-1);
             std::copy_n(args_content.begin(), count, dest);
             dest[count] = '\0';
         }
