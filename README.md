@@ -8,7 +8,9 @@ Using a WiX Burn bundle with the default bootstrapper, it is not possible to tri
 This repository contains a solution to this by provding a small executable detecting if WinFsp  <= 1.12.2339 is installed and if so, uninstalls it.
 
 The executable shows a confirmation dialog before uninstallation, the actual uninstallation is silent.
-To skip the dialog and ensure full silent execution, pass `-q` as the first argument.
+To skip the dialog and ensure full silent execution, pass `-q` as an argument.
+To adjust the window title, pass `-t <My custom window title>` as an argument.
+To adjust the message in the dialog box, pass `-m <My custom message>` as an argument.
 
 ## Usage
 ```xml
@@ -16,9 +18,15 @@ To skip the dialog and ensure full silent execution, pass `-q` as the first argu
     <ExePackage Cache="yes" PerMachine="yes" Vital="yes" Permanent="no"
       SourceFile="resources\winfsp-uninstaller.exe"
       DisplayName="Removing outdated WinFsp Driver"
-      Description="Executable to remove old winfsp"
+      Description="Workaround to remove old winfsp"
       DetectCondition="false"
+      InstallCondition="InstalledLegacyWinFspVersion &lt;&gt; v0.0.0.0"
+      >
         <CommandLine Condition="WixBundleUILevel &lt;= 3" InstallArgument="-q" />
+        <!-- XML allows line breaks in attributes, hence keep the line breaks -->
+        <CommandLine Condition="WixBundleUILevel &gt; 3" InstallArgument="-t &quot;Cryptomator Installer&quot; -m &quot;Cryptomator requires a newer version of the WinFsp driver. The installer will now uninstall WinFsp, reboot, and afterwards proceed with this installation.
+
+Do you want to continue?&quot;" />
         <ExitCode Behavior="forceReboot" Value="0"/>
         <ExitCode Behavior="success" Value="1"/>
         <ExitCode Behavior="error" Value="2"/>
