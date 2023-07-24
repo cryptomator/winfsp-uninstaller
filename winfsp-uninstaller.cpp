@@ -25,10 +25,11 @@ void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest,
     -m: (optional) Message used in the confirmation dialog (truncated to at most 250 WCHARS)
     
     Return values are:
-    0: WinFSP 1.x driver uninstalled successfully
-    1: WinFSP 1.x driver not found, nothing happend
-    2: WinFSP 1.x driver uninstallation failed
+    0: WinFsp 1.x driver uninstalled successfully
+    1: WinFsp 1.x driver not found, nothing happend
+    2: WinFsp 1.x driver uninstallation failed
     3: User aborted uninstallation
+    4: WinFsp 1.x driver uninstallation successful, restart required
 */
 int main(const int argc, char* argv[])
 {
@@ -75,17 +76,29 @@ int main(const int argc, char* argv[])
         }
     }
 
-
     //disable winfsp UI
     MsiSetInternalUI((INSTALLUILEVEL)(INSTALLUILEVEL_NONE | INSTALLUILEVEL_UACONLY), NULL);
     //uninstall product
     result = MsiConfigureProductExW(code, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT, NULL);
-    if (result == ERROR_SUCCESS) {
-        return 0;
-    }
-    else {
+    if (result != ERROR_SUCCESS) {
         return 2;
     }
+
+    //query registry to check if a restart is required
+    HKEY key;
+    result = RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Control\\Session Manager", 0, KEY_READ, &key);
+    if (result != ERROR_SUCCESS) {
+		return 4; //enforce a restart
+	}
+    DWORD restart = 0;
+	DWORD size = sizeof(DWORD);
+	result = RegQueryValueExW(key, L"PendingFileRenameOperations", NULL, NULL, (LPBYTE)&restart, &size);
+	RegCloseKey(key);
+    if (result != ERROR_SUCCESS || restart != 0) {
+		return 4; //enforce a restart
+	}
+	return 0;
+    
 }
 
 void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest, size_t dest_length) {
