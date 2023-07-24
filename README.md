@@ -27,10 +27,11 @@ To adjust the message in the dialog box, pass `-m <My custom message>` as an arg
         <CommandLine Condition="WixBundleUILevel &gt; 3" InstallArgument="-t &quot;Cryptomator Installer&quot; -m &quot;Cryptomator requires a newer version of the WinFsp driver. The installer will now uninstall WinFsp, reboot, and afterwards proceed with this installation.
 
 Do you want to continue?&quot;" />
-        <ExitCode Behavior="forceReboot" Value="0"/>
+        <ExitCode Behavior="success" Value="0"/>
         <ExitCode Behavior="success" Value="1"/>
         <ExitCode Behavior="error" Value="2"/>
         <ExitCode Behavior="error" Value="3"/>
+        <ExitCode Behavior="forceReboot" Value="4"/>
     </ExePackage>
     <!-- install new version of WinFsp here -->
     <MsiPackage
