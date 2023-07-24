@@ -24,7 +24,7 @@ To adjust the message in the dialog box, pass `-m <My custom message>` as an arg
       >
         <CommandLine Condition="WixBundleUILevel &lt;= 3" InstallArgument="-q" />
         <!-- XML allows line breaks in attributes, hence keep the line breaks -->
-        <CommandLine Condition="WixBundleUILevel &gt; 3" InstallArgument="-t &quot;Cryptomator Installer&quot; -m &quot;Cryptomator requires a newer version of the WinFsp driver. The installer will now uninstall WinFsp, reboot, and afterwards proceed with this installation.
+        <CommandLine Condition="WixBundleUILevel &gt; 3" InstallArgument="-t &quot;MyApp Installer&quot; -m &quot;MyApp requires a newer version of the WinFsp driver. The installer will now uninstall WinFsp, reboot, and afterwards proceed with this installation.
 
 Do you want to continue?&quot;" />
         <ExitCode Behavior="success" Value="0"/>
