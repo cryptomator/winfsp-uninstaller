@@ -94,10 +94,10 @@ int main(const int argc, char* argv[])
 	DWORD size = sizeof(DWORD);
 	result = RegQueryValueExW(key, L"PendingFileRenameOperations", NULL, NULL, (LPBYTE)&restart, &size);
 	RegCloseKey(key);
-    if (result != ERROR_SUCCESS || restart != 0) {
-		return 4; //enforce a restart
-	}
-	return 0;
+    if ( result == ERROR_FILE_NOT_FOUND || (result == ERROR_SUCCESS && restart == 0)) {
+        return 0;
+    }
+    return 4; //enforce a restart
     
 }
 
