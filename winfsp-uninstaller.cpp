@@ -90,15 +90,12 @@ int main(const int argc, char* argv[])
     if (result != ERROR_SUCCESS) {
 		return 4; //enforce a restart
 	}
-    DWORD restart = 0;
-	DWORD size = sizeof(DWORD);
-	result = RegQueryValueExW(key, L"PendingFileRenameOperations", NULL, NULL, (LPBYTE)&restart, &size);
+    result = RegQueryValueExW(key, L"PendingFileRenameOperations", NULL, NULL, NULL, NULL);
 	RegCloseKey(key);
-    if ( result == ERROR_FILE_NOT_FOUND || (result == ERROR_SUCCESS && restart == 0)) {
+    if ( result == ERROR_FILE_NOT_FOUND ) {
         return 0;
     }
     return 4; //enforce a restart
-    
 }
 
 void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest, size_t dest_length) {
