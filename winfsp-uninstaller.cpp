@@ -79,7 +79,7 @@ int main(const int argc, char* argv[])
     //disable winfsp UI
     MsiSetInternalUI((INSTALLUILEVEL)(INSTALLUILEVEL_NONE | INSTALLUILEVEL_UACONLY), NULL);
     //uninstall product
-    result = MsiConfigureProductExW(code, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT, NULL);
+    result = MsiConfigureProductExW(code, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT, L"IGNOREDEPENDENCIES=ALL");
     if (result != ERROR_SUCCESS) {
         return 2;
     }
