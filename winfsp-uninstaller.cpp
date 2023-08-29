@@ -22,6 +22,7 @@ enum UNINSTALL {
     UNINSTALL_FAILED = 2,
     UNINSTALL_CANCELED = 3,
     UNINSTALL_REBOOT_REQUIRED = 4,
+    UNINSTALL_SKIPPED = 5 
 };
 
 /*
@@ -31,6 +32,7 @@ enum UNINSTALL {
     -q: (optional) Quiet mode, skips confirmation dialog
     -t [my title]: (optional) Title used in the confirmation dialog (truncated to at most 60 WHCHARS)
     -m [my message]: (optional) Message used in the confirmation dialog (truncated to at most 250 WCHARS)
+    -s: (optional) Skips installer (necessary during uninstall action)
 
     Return values are:
     0: WinFsp 1.x driver uninstalled successfully
@@ -38,9 +40,12 @@ enum UNINSTALL {
     2: WinFsp 1.x driver uninstallation failed
     3: User aborted uninstallation
     4: WinFsp 1.x driver uninstallation successful, restart required
+    5: Uninstallation was skipped
 */
 int main(const int argc, char* argv[])
 {
+    const std::string skip_flag = "-s"s;
+
     const std::string quiet_flag = "-q"s;
 
     const std::string title_flag = "-t"s;
@@ -55,6 +60,10 @@ int main(const int argc, char* argv[])
     std::vector<std::string> args;
     for (int i = 0; i < argc; i++) {
         args.push_back(argv[i]);
+    }
+    //check if -s is present
+    if (std::find(args.begin(), args.end(), skip_flag) != args.end()) {
+        return UNINSTALL_SKIPPED;
     }
 
     //search product code with upgrade code
