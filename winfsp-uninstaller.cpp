@@ -20,10 +20,10 @@ void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest,
     Executable to uninstall the WinFSP 1.x driver.
 
     Parameters:
-    -q: Quiet mode, skips confirmation dialog
-    -t: (optional) Title used in the confirmation dialog (truncated to at most 60 WHCHARS)
-    -m: (optional) Message used in the confirmation dialog (truncated to at most 250 WCHARS)
-    
+    -q: (optional) Quiet mode, skips confirmation dialog
+    -t [my title]: (optional) Title used in the confirmation dialog (truncated to at most 60 WHCHARS)
+    -m [my message]: (optional) Message used in the confirmation dialog (truncated to at most 250 WCHARS)
+
     Return values are:
     0: WinFsp 1.x driver uninstalled successfully
     1: WinFsp 1.x driver not found, nothing happend
