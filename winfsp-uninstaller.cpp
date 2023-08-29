@@ -16,6 +16,14 @@
 using namespace std::string_literals; // enables s-suffix for std::string literals
 void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest, size_t dest_length);
 
+enum UNINSTALL {
+    UNINSTALL_SUCCEEDED = 0,
+    UNINSTALL_NOT_FOUND = 1,
+    UNINSTALL_FAILED = 2,
+    UNINSTALL_CANCELED = 3,
+    UNINSTALL_REBOOT_REQUIRED = 4,
+};
+
 /*
     Executable to uninstall the WinFSP 1.x driver.
 
@@ -43,26 +51,24 @@ int main(const int argc, char* argv[])
     const size_t msg_length = 251;
     WCHAR message[msg_length] = L"WinFSP 1.x driver found. Do you want to uninstall it?";
 
+    //parse arguments and show dialog
+    std::vector<std::string> args;
+    for (int i = 0; i < argc; i++) {
+        args.push_back(argv[i]);
+    }
 
     //search product code with upgrade code
     WCHAR code[39];
     UINT result = MsiEnumRelatedProductsW(L"{82F812D9-4083-4EF1-8BC8-0F1EDA05B46B}", 0, 0, code);
     if (result == ERROR_NO_MORE_ITEMS) {
-        //product not found
-        return 1;
+        return UNINSTALL_NOT_FOUND;
     }
     else if (result != ERROR_SUCCESS) {
-        //error
-        return 2;
+        return UNINSTALL_FAILED;
     }
 
-    //parse arguments and show dialog
-    std::vector<std::string> args;
-    for (int i = 0; i < argc; i++) {
-		args.push_back(argv[i]);
-	}
     //check if -q is not present
-    if ((std::find(args.begin(), args.end(), quiet_flag) == args.end())) {
+    if (std::find(args.begin(), args.end(), quiet_flag) == args.end()) {
         //create alert dialog with OK and cancel button
 
         //adjust message and title
@@ -72,7 +78,7 @@ int main(const int argc, char* argv[])
         int answer = MessageBox(NULL, message, title, MB_OKCANCEL | MB_ICONQUESTION | MB_TASKMODAL);
 
         if (answer != IDOK) {
-            return 3;
+            return UNINSTALL_CANCELED;
         }
     }
 
@@ -81,21 +87,21 @@ int main(const int argc, char* argv[])
     //uninstall product
     result = MsiConfigureProductExW(code, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT, L"IGNOREDEPENDENCIES=ALL");
     if (result != ERROR_SUCCESS) {
-        return 2;
+        return UNINSTALL_FAILED;
     }
 
     //query registry to check if a restart is required
     HKEY key;
     result = RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Control\\Session Manager", 0, KEY_READ, &key);
     if (result != ERROR_SUCCESS) {
-		return 4; //enforce a restart
+		return UNINSTALL_REBOOT_REQUIRED;
 	}
     result = RegQueryValueExW(key, L"PendingFileRenameOperations", NULL, NULL, NULL, NULL);
 	RegCloseKey(key);
     if ( result == ERROR_FILE_NOT_FOUND ) {
-        return 0;
+        return UNINSTALL_SUCCEEDED;
     }
-    return 4; //enforce a restart
+    return UNINSTALL_REBOOT_REQUIRED; //enforce a restart
 }
 
 void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest, size_t dest_length) {
