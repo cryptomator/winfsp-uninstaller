@@ -11,6 +11,7 @@ The executable shows a confirmation dialog before uninstallation, the actual uni
 To skip the dialog and ensure full silent execution, pass `-q` as an argument.
 To adjust the window title, pass `-t <My custom window title>` as an argument.
 To adjust the message in the dialog box, pass `-m <My custom message>` as an argument.
+To directly exit the application and do nothing, pass `-s` as an argument. This flag is necessary to skip execution during uninstall or other bundle actions.
 
 ## Usage
 ```xml
@@ -24,7 +25,7 @@ To adjust the message in the dialog box, pass `-m <My custom message>` as an arg
       >
         <CommandLine Condition="WixBundleUILevel &lt;= 3" InstallArgument="-q" />
         <!-- XML allows line breaks in attributes, hence keep the line breaks -->
-        <CommandLine Condition="WixBundleUILevel &gt; 3" InstallArgument="-t &quot;MyApp Installer&quot; -m &quot;MyApp requires a newer version of the WinFsp driver. The installer will now uninstall WinFsp, reboot, and afterwards proceed with this installation.
+        <CommandLine Condition="WixBundleUILevel &gt; 3" InstallArgument="-t &quot;MyApp Installer&quot; -m &quot;MyApp requires a newer version of the WinFsp driver. The installer will now uninstall WinFsp, possibly reboot, and afterwards proceed with this installation.
 
 Do you want to continue?&quot;" />
         <ExitCode Behavior="success" Value="0"/>
@@ -32,6 +33,7 @@ Do you want to continue?&quot;" />
         <ExitCode Behavior="error" Value="2"/>
         <ExitCode Behavior="error" Value="3"/>
         <ExitCode Behavior="forceReboot" Value="4"/>
+        <ExitCode Behavior="success" Value="5"/>
     </ExePackage>
     <!-- install new version of WinFsp here -->
     <MsiPackage
