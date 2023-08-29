@@ -23,11 +23,11 @@ To directly exit the application and do nothing, pass `-s` as an argument. This 
       DetectCondition="false"
       InstallCondition="InstalledLegacyWinFspVersion &lt;&gt; v0.0.0.0"
       >
-        <CommandLine Condition="WixBundleUILevel &lt;= 3" InstallArgument="-q" />
+        <CommandLine Condition="WixBundleUILevel &lt;= 3" InstallArgument="-q" RepairArgument="-q" UninstallArgument="-s"/>
         <!-- XML allows line breaks in attributes, hence keep the line breaks -->
         <CommandLine Condition="WixBundleUILevel &gt; 3" InstallArgument="-t &quot;MyApp Installer&quot; -m &quot;MyApp requires a newer version of the WinFsp driver. The installer will now uninstall WinFsp, possibly reboot, and afterwards proceed with this installation.
 
-Do you want to continue?&quot;" />
+Do you want to continue?&quot;" RepairArgument="-q" UninstallArgument="-s"/>
         <ExitCode Behavior="success" Value="0"/>
         <ExitCode Behavior="success" Value="1"/>
         <ExitCode Behavior="error" Value="2"/>
