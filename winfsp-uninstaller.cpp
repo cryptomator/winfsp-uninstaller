@@ -94,23 +94,16 @@ int main(const int argc, char* argv[])
     //disable winfsp UI
     MsiSetInternalUI((INSTALLUILEVEL)(INSTALLUILEVEL_NONE | INSTALLUILEVEL_UACONLY), NULL);
     //uninstall product
-    result = MsiConfigureProductExW(code, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT, L"IGNOREDEPENDENCIES=ALL");
-    if (result != ERROR_SUCCESS) {
-        return UNINSTALL_FAILED;
-    }
-
-    //query registry to check if a restart is required
-    HKEY key;
-    result = RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Control\\Session Manager", 0, KEY_READ, &key);
-    if (result != ERROR_SUCCESS) {
-		return UNINSTALL_REBOOT_REQUIRED;
-	}
-    result = RegQueryValueExW(key, L"PendingFileRenameOperations", NULL, NULL, NULL, NULL);
-	RegCloseKey(key);
-    if ( result == ERROR_FILE_NOT_FOUND ) {
+    result = MsiConfigureProductExW(code, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT, L"IGNOREDEPENDENCIES=ALL REBOOT=ReallySuppress");
+    if (result == ERROR_SUCCESS) {
         return UNINSTALL_SUCCEEDED;
     }
-    return UNINSTALL_REBOOT_REQUIRED; //enforce a restart
+    else if (result == ERROR_SUCCESS_REBOOT_REQUIRED) {
+        return UNINSTALL_REBOOT_REQUIRED; //enforce a restart
+    }
+    else {
+        return UNINSTALL_FAILED;
+    }
 }
 
 void searchAndCopy(std::string flag, std::vector<std::string> args, WCHAR* dest, size_t dest_length) {
