@@ -12,6 +12,9 @@ To skip the dialog and ensure full silent execution, pass `-q` as an argument.
 To adjust the window title, pass `-t <My custom window title>` as an argument.
 To adjust the message in the dialog box, pass `-m <My custom message>` as an argument.
 To directly exit the application and do nothing, pass `-s` as an argument. This flag is necessary to skip execution during uninstall or other bundle actions.
+To log the different steps and get "debug" information, pass `-l <P:\ath\to\log\file>` as an argument. If the specified file already exists, it is truncated.
+
+For more info about the flags, see [winfsp-uninstaller.cpp](winfsp-uninstaller.cpp).
 
 ## Usage
 ```xml
