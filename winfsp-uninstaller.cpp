@@ -30,8 +30,8 @@ enum UNINSTALL {
 
     Parameters:
     -q: (optional) Quiet mode, skips confirmation dialog
-    -t [my title]: (optional) Title used in the confirmation dialog (truncated to at most 60 WHCHARS)
-    -m [my message]: (optional) Message used in the confirmation dialog (truncated to at most 250 WCHARS)
+    -t [my title]: (optional) Title used in the confirmation dialog (truncated to at most 60 WHCHARs)
+    -m [my message]: (optional) Message used in the confirmation dialog (truncated to at most 250 WCHARs)
     -s: (optional) Skips installer (necessary during uninstall action)
 
     Return values are:
