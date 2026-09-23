@@ -25,9 +25,9 @@ jobs:
         SOLUTION_FILE_PATH: .\winfsp-uninstaller.sln
         BUILD_CONFIG: Debug
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@ede762b26a2de8d110bb5a3db4d7e0e080c0e917 # v1.3.3
       with:
         msbuild-architecture: x64
     - name: If tagged, use release config
@@ -41,7 +41,7 @@ jobs:
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIG}} /p:Platform=x64 ${{env.SOLUTION_FILE_PATH}}
     - name: Codesign on release builds
       if: startsWith(github.ref, 'refs/tags/')
-      uses: skymatic/code-sign-action@v2
+      uses: skymatic/code-sign-action@500ce4f8261ca9bd8f85978c1652b34fb511bdf4 # v2.0.1
       with:
         certificate: ${{ secrets.WIN_CODESIGN_P12_BASE64 }}
         password: ${{ secrets.WIN_CODESIGN_P12_PW }}
@@ -50,7 +50,7 @@ jobs:
         timestampUrl: 'http://timestamp.digicert.com'
         folder: x64\${{env.BUILD_CONFIG}}
     - name: Upload build dir
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3.2.1
       with:
         name: winfsp-uninstaller
         path: .\x64\${{env.BUILD_CONFIG}}\winfsp-uninstaller.exe
