@@ -26,6 +26,8 @@ jobs:
         BUILD_CONFIG: Debug
     steps:
     - uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
+      with:
+        persist-credentials: false
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@ede762b26a2de8d110bb5a3db4d7e0e080c0e917 # v1.3.3
       with:
